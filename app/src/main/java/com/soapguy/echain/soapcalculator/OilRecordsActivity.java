@@ -1,6 +1,7 @@
 package com.soapguy.echain.soapcalculator;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -220,10 +220,32 @@ public class OilRecordsActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+
+        if(id == R.id.action_reset){
+            boolean[] choice = loadChooserPref();
+            Intent intent = new Intent(OilRecordsActivity.this, OilChooserActivity.class);
+            if (choice != null) intent.putExtra(SoapGlobalConfig.CHOOSER_CHOICES_DATA, choice);
+            super.onResume();
+            startActivity(intent);
+        }
+
         if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private boolean [] loadChooserPref(){
+        SharedPreferences chooserPref = getSharedPreferences(SoapGlobalConfig.PREFS_CHOOSER_NAME,0);
+        String arrayName = SoapGlobalConfig.CHOISE_ARRAY_NAME;
+        int arraySize = chooserPref.getInt(arrayName + "_size", -1);
+        if(arraySize<0) return null;
+        boolean [] choices = new boolean[arraySize];
+        for (int i=0; i<arraySize;i++){
+            choices[i] = chooserPref.getBoolean(arrayName + "_" + i, false);
+        }
+        return choices;
+    }
+
 }

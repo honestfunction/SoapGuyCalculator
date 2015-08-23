@@ -2,8 +2,16 @@
     <string name="app_name">肥皂人計算器</string>
 
     <string name="hello_world">Hello world!</string>
+
     <string name="action_settings">Settings</string>
-    <string name="title_activity_oil_chooser">選擇常用的肥皂油</string>
+
+    <string name="action_records">配方紀錄</string>
+    <string name="action_new">新增油品</string>
+    <string name="action_reset">重新選擇油品</string>
+    <string name="action_rename">記錄更名</string>
+    <string name="action_delete">記錄刪除</string>>
+
+]    <string name="title_activity_oil_chooser">選擇常用的肥皂油</string>
     <string name="title_activity_oil_input">輸入配方</string>
     <string name="title_activity_oil_records">配方紀錄</string>
 </resources>

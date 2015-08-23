@@ -42,6 +42,13 @@ public class SoapData {
         dbSql.close();
     }
 
+    public static int getRecordsCount(Context context){
+        SoapDbHelper dbHelper = new SoapDbHelper(context);
+        Cursor cursor = dbHelper.getAll(dbHelper, SoapDbHelper.DB_RECORD_TABLE,
+                SoapDbHelper.RECORD_COLUMNS);
+        return cursor.getCount();
+    }
+
     public static OilInputRecord [] getInputRecords(Context context){
         OilInputRecord [] records= null;
         SoapDbHelper dbHelper = new SoapDbHelper(context);

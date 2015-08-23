@@ -205,7 +205,16 @@ public class OilInputActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+
+        if (id == R.id.action_records) {
+            if(SoapData.getRecordsCount(OilInputActivity.this)>0) {
+                Intent intent = new Intent(OilInputActivity.this, OilRecordsActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(OilInputActivity.this,
+                        "沒有配方紀錄", Toast.LENGTH_SHORT).show();
+            }
+
             return true;
         }
 

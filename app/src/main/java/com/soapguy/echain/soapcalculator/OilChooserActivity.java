@@ -17,11 +17,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class OilChooserActivity extends AppCompatActivity {
     final private String TAG="OilChooserActivity";
     private ListView mListViewChooser;
+    OilChooserAdapter mAdapterItems;
+
     private Button mButtonNext;
     private ArrayList<OilResource.OilClass> mOils;
     private boolean [] mListCheckBox;
@@ -50,8 +53,8 @@ public class OilChooserActivity extends AppCompatActivity {
     private void setupContent(){
         mListViewChooser = (ListView) findViewById(R.id.listview_chooser);
         mListViewChooser.setOnItemClickListener(mItemClickListener);
-        OilChooserAdapter adapterItems = new OilChooserAdapter(this, mOils, mListCheckBox);
-        mListViewChooser.setAdapter(adapterItems);
+        mAdapterItems = new OilChooserAdapter(this, mOils, mListCheckBox);
+        mListViewChooser.setAdapter(mAdapterItems);
         mButtonNext = (Button) findViewById(R.id.button_oilchooser_next);
         mButtonNext.setOnClickListener(mButtonNextListener);
     }
@@ -106,7 +109,7 @@ public class OilChooserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.soapguy_logo)
                 .setTitle("Closing This App")
                 .setMessage("Are you sure you want to exit this app?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
@@ -135,6 +138,26 @@ public class OilChooserActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+
+
+        if (id == R.id.action_reset) {
+            Arrays.fill(mListCheckBox,false);
+            mAdapterItems.notifyDataSetChanged();
+            return true;
+        }
+
+        if (id == R.id.action_records) {
+            if(SoapData.getRecordsCount(OilChooserActivity.this)>0) {
+                Intent intent = new Intent(OilChooserActivity.this, OilRecordsActivity.class);
+                super.onResume(); //tricky: Performing stop of activity that is not resumed
+                startActivity(intent);
+            } else {
+                Toast.makeText(OilChooserActivity.this,
+                        "沒有配方紀錄", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+
         if (id == R.id.action_settings) {
             return true;
         }
