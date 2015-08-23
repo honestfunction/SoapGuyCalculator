@@ -1,8 +1,9 @@
 package com.soapguy.echain.soapcalculator;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,17 +26,15 @@ public class OilRecordsActivity extends AppCompatActivity {
     private Spinner mSpnSelect;
     private String [] mSelectItems;
 
-    private ListView mListViewRecord;
     private OilRecordsAdapter mAdapterItems;
 
     private LinearLayout mLayoutList;
-
-    private TextView mTextResult;
 
     private Button mButtonAdjust;
 
     private SoapOilCalculator mSoapOilCalculator;
 
+    private LinearLayout mLayoutResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,8 @@ public class OilRecordsActivity extends AppCompatActivity {
         setupSpinner();
         setupLayoutList();
         setupButtonAdjust();
-        setupTextResult();
+        //setupTextResult();
+        setupLayoutResult();
     }
 
     private void setupSpinner(){
@@ -106,22 +106,47 @@ public class OilRecordsActivity extends AppCompatActivity {
         mLayoutList.invalidate();
     }
 
-    private void setupTextResult(){
-        mTextResult = (TextView) findViewById(R.id.text_record_result);
+    private void setupLayoutResult(){
+        mLayoutResult = (LinearLayout) findViewById(R.id.linear_oilresult);
         mSoapOilCalculator = new SoapOilCalculator(mOils,mRecords[mRecordIndex]);
-        updateTextResult();
+        updateLayoutResult();
     }
 
-    private void updateTextResult(){
-        mTextResult.setText("總油量 \n" + mSoapOilCalculator.getTotalOilWeight() + " g\n" +
-                            "NaOH(氫氧化鈉) \n" + mSoapOilCalculator.getTotalNaoh() + " g\n" +
-                            "INS值 \n" + mSoapOilCalculator.getAverageIns() + "\n" +
-                            "水量(" + mSoapOilCalculator.getWaterFormula(1) + ")\n" +
-                            +mSoapOilCalculator.getWaterWeight(1) + " g\n" +
-                            "水量(" + mSoapOilCalculator.getWaterFormula(2) + ")\n" +
-                            +mSoapOilCalculator.getWaterWeight(2) + " g\n" +
-                            "水量(" + mSoapOilCalculator.getWaterFormula(3) + ")\n" +
-                            +mSoapOilCalculator.getWaterWeight(3) + " g");
+    private void updateLayoutResult(){
+
+        ArrayList<LinearLayout> lLayouts = new ArrayList<>();
+
+        lLayouts.add(generateResultLayout("總油量", "公克",
+                mSoapOilCalculator.getTotalOilWeight()+ ""));
+        lLayouts.add(generateResultLayout("NaOH", "氫氧化鈉",
+                mSoapOilCalculator.getTotalNaoh()+""));
+        lLayouts.add(generateResultLayout("INS", "120~180",
+                mSoapOilCalculator.getAverageIns()+""));
+        lLayouts.add(generateResultLayout("水量(1)", mSoapOilCalculator.getWaterFormula(1),
+                mSoapOilCalculator.getWaterWeight(1)+""));
+        lLayouts.add(generateResultLayout("水量(2)", mSoapOilCalculator.getWaterFormula(2),
+                mSoapOilCalculator.getWaterWeight(2)+""));
+        lLayouts.add(generateResultLayout("水量(3)", mSoapOilCalculator.getWaterFormula(3),
+                mSoapOilCalculator.getWaterWeight(3)+""));
+
+        mLayoutResult.removeAllViews();
+        for(LinearLayout layout: lLayouts) {
+            mLayoutResult.addView(layout);
+        }
+        mLayoutResult.invalidate();
+    }
+
+    private LinearLayout generateResultLayout(String name, String hint, String number){
+        LayoutInflater inflater = LayoutInflater.from(OilRecordsActivity.this);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.llayout_oil_result, null, false);
+        TextView textName = (TextView) layout.findViewById(R.id.text_result_name);
+        TextView textHint = (TextView) layout.findViewById(R.id.text_result_hint);
+        TextView textNumber = (TextView) layout.findViewById(R.id.text_result_number);
+
+        textName.setText(name);
+        textHint.setText(hint);
+        textNumber.setText(number);
+        return layout;
     }
 
     private void setupButtonAdjust(){
@@ -176,7 +201,8 @@ public class OilRecordsActivity extends AppCompatActivity {
         updateLayoutList();
 
         mSoapOilCalculator.modifyRecord(mRecords[mRecordIndex]);
-        updateTextResult();
+        //updateTextResult();
+        updateLayoutResult();
     }
 
     @Override

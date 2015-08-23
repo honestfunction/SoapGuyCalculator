@@ -53,15 +53,16 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 />
-            <TextView
-                android:id="@+id/text_record_result"
+
+            <LinearLayout
+                android:id="@+id/linear_oilresult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:gravity="center"
-                android:textStyle="bold"
+                android:orientation="vertical"
+                android:layout_gravity="center"
                 android:background="@drawable/back"
-                />
+                ></LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
