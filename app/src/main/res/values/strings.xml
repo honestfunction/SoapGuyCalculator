@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SoapCalculator</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_oil_chooser">選擇常用的肥皂油</string>
+    <string name="title_activity_oil_input">輸入配方</string>
+    <string name="title_activity_oil_records">配方紀錄</string>
+</resources>
