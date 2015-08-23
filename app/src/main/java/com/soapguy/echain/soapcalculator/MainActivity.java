@@ -2,6 +2,7 @@ package com.soapguy.echain.soapcalculator;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences mInitSettings;
     private SharedPreferences mChooserPref;
 
+    private int mSplashTimeOut=1500;
+    Handler mSplashHandler =null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,12 +27,22 @@ public class MainActivity extends AppCompatActivity {
         startChooseOilActivity();
     }
 
+
+
     private void startChooseOilActivity(){
-        boolean [] choice = loadChooserPref();
-        Intent intent = new Intent (this, OilChooserActivity.class);
-        if (choice!=null) intent.putExtra(SoapGlobalConfig.CHOOSER_CHOICES_DATA, choice);
-        startActivity(intent);
+        mSplashHandler = new Handler();
+        mSplashHandler.postDelayed(mDelayRunnable, mSplashTimeOut);
     }
+
+    Runnable mDelayRunnable = new Runnable(){
+        @Override
+        public void run() {
+            boolean[] choice = loadChooserPref();
+            Intent intent = new Intent(MainActivity.this, OilChooserActivity.class);
+            if (choice != null) intent.putExtra(SoapGlobalConfig.CHOOSER_CHOICES_DATA, choice);
+            startActivity(intent);
+        }
+    };
 
     private boolean [] loadChooserPref(){
         mChooserPref = getSharedPreferences(SoapGlobalConfig.PREFS_CHOOSER_NAME,0);
@@ -51,10 +65,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDatabase(){
-        Log.d(TAG,"initDatabase() invoked");
-        //TODO: AsyncTask
-        SoapData.initDatabase(this);
-        mInitSettings.edit().putBoolean("db_created", true).commit();
+        Log.d(TAG, "initDatabase() invoked");
+        mSplashTimeOut = 5000;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SoapData.initDatabase(MainActivity.this);
+                mInitSettings.edit().putBoolean("db_created", true).commit();
+            }
+        }).start();
     }
 
     private boolean isDbCreated(){
@@ -83,4 +102,11 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        if(mSplashHandler!=null ) mSplashHandler.removeCallbacks(mDelayRunnable);
+        finish();
+    }
+
 }
