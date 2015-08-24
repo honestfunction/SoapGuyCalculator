@@ -15,12 +15,17 @@ public class OilInputRecord {
     public final String TAG = "OilInputRecord";
 
     private HashMap<String, String> mInputData = null;
+    int mId;
     private String mInputTime=null;
     private String mJsonData=null;
+    private String mName = null;
 
-    public OilInputRecord(String time, String jsonData){
+    public OilInputRecord(int id, String time, String jsonData, String name){
+        mId = id;
         mInputTime = time;
         mJsonData=jsonData;
+        mName = name;
+        if(mName == null) mName = "";
         createInputDataMap();
     }
 
@@ -72,6 +77,9 @@ public class OilInputRecord {
         if(mInputTime==null) mInputTime = "1986/09/16";
         return mInputTime;
     }
+
+    public String getName() {return mName;}
+    public int getId() {return mId;}
 
     public int [] keys(){
         int [] keyIntArray = new int[mInputData.size()];

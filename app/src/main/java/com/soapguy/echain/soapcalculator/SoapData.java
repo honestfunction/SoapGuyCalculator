@@ -60,13 +60,26 @@ public class SoapData {
             records= new OilInputRecord[rows];
             cursor.moveToFirst();
             for (int i=0; i<rows; i++){
-                records[i] = new OilInputRecord(cursor.getString(1),cursor.getString(2));
+                records[i] = new OilInputRecord(cursor.getInt(0),
+                        cursor.getString(1),cursor.getString(2), cursor.getString(3));
                 cursor.moveToNext();
             }
         }
         cursor.close();
         dbHelper.close();
         return records;
+    }
+
+    public static void updateRecordName(Context context, int id, String name){
+        SoapDbHelper dbHelper = new SoapDbHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put("name", name );
+
+        String where = "_id=" + id;
+
+        dbHelper.updateValue(db, SoapDbHelper.DB_RECORD_TABLE , cv ,where);
     }
 
     public static ArrayList<OilResource.OilClass> getOils(Context context){

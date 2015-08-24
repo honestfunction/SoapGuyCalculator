@@ -1,5 +1,7 @@
 package com.soapguy.echain.soapcalculator;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -51,7 +54,7 @@ public class OilRecordsActivity extends AppCompatActivity {
         mRecords = SoapData.getInputRecords(this);
 
         if(mRecords == null) {
-            mRecordIndex=-1;
+            mRecordIndex= -1;
         } else {
             mRecordIndex = mRecords.length -1;
         }
@@ -65,14 +68,23 @@ public class OilRecordsActivity extends AppCompatActivity {
         setupLayoutResult();
     }
 
+    ArrayAdapter<String> mAdaptRecordList;
     private void setupSpinner(){
         mSpnSelect = (Spinner) findViewById(R.id.spin_select_record);
         mSelectItems = new String [mRecords.length];
         updateItemsFromRecords();
-        ArrayAdapter<String> adaptRecordList =  new ArrayAdapter<String>(this,
+
+        /*
+        mAdaptRecordList =  new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item,mSelectItems);
-        adaptRecordList.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpnSelect.setAdapter(adaptRecordList);
+        //mAdaptRecordList.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+           */
+
+        mAdaptRecordList =  new ArrayAdapter<String>(this,
+                R.layout.spinner_records, mSelectItems);
+        mAdaptRecordList.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mSpnSelect.setAdapter(mAdaptRecordList);
 
         mSpnSelect.setOnItemSelectedListener(mSpinRecordListener);
     }
@@ -191,7 +203,12 @@ public class OilRecordsActivity extends AppCompatActivity {
 
     private void updateItemsFromRecords(){
         for (int i = mRecords.length-1 ; i>=0 ; i--){
-            mSelectItems[mRecords.length-1-i] = mRecords[i].getTime() + "_" + i;
+            if(mRecords[i].getName().isEmpty()) {
+                mSelectItems[mRecords.length - 1 - i] = mRecords[i].getTime() + "_" + (i+1);
+            } else{
+                mSelectItems[mRecords.length - 1 - i] = mRecords[i].getTime() + "_" +
+                    mRecords[i].getName();
+            }
         }
     }
 
@@ -228,6 +245,30 @@ public class OilRecordsActivity extends AppCompatActivity {
             super.onResume();
             startActivity(intent);
         }
+
+        if (id == R.id.action_rename) {
+            final EditText editName = new EditText(OilRecordsActivity.this);
+            final String currentName = mRecords[mRecordIndex].getName();
+            editName.setText(currentName);
+            new AlertDialog.Builder(OilRecordsActivity.this).setTitle("記錄名稱")
+                    .setView(editName)
+                    .setPositiveButton("確定", new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if ( editName.getText().toString().equals(currentName)) return;
+
+                            SoapData.updateRecordName(OilRecordsActivity.this, mRecords[mRecordIndex].getId()
+                                    , editName.getText().toString());
+                            initData();
+                            updateItemsFromRecords();
+                            mAdaptRecordList.notifyDataSetChanged();
+                        }
+                    })
+                    .show();
+
+            //button click
+        }
+
 
         if (id == R.id.action_settings) {
             return true;

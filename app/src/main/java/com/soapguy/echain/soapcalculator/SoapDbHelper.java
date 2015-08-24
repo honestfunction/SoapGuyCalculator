@@ -1,5 +1,6 @@
 package com.soapguy.echain.soapcalculator;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -59,6 +60,11 @@ public class SoapDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(table, columns, null,null,null,null,null);
         return cursor;
+    }
+
+    public boolean updateValue(SQLiteDatabase db,
+            String table, ContentValues content, String where){
+        return db.update(table, content, where, null) > 0;
     }
 
 
