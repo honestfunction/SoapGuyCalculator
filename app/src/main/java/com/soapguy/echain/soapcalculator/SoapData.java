@@ -102,10 +102,24 @@ public class SoapData {
     public static void initDatabase(Context context) {
         Log.d(TAG, "initDatabase()");
         SoapDbHelper dbHelper = new SoapDbHelper(context);
-        SQLiteDatabase soapDb = dbHelper.getWritableDatabase();
-        if(dbHelper.isNewDbCreated()) initOilTable(soapDb);
-        useDefaultOils();
-        soapDb.close();
+        initTableData(dbHelper);
         dbHelper.close();
     }
+    private static void initTableData(SoapDbHelper dbHelper){
+        SQLiteDatabase soapDb = dbHelper.getWritableDatabase();
+        if(dbHelper.isNewDbCreated()) {
+            initOilTable(soapDb);
+            useDefaultOils();
+        }
+        soapDb.close();
+    }
+
+    /*
+    static public SoapDbHelper.IUpdateCallback sCbInitDatabase = new SoapDbHelper.IUpdateCallback(){
+        @Override
+        public void update(SoapDbHelper dbHelper) {
+            initTableData(dbHelper);
+        }
+    };
+    */
 }

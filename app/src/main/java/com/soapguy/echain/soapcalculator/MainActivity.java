@@ -12,10 +12,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
     private final String TAG="MainActivity";
 
-    private SharedPreferences mInitSettings;
-    private SharedPreferences mChooserPref;
-
-    private int mSplashTimeOut=1500;
+    final private int SPLASH_TIMEOUT=2000;
     Handler mSplashHandler =null;
 
     @Override
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startChooseOilActivity(){
         mSplashHandler = new Handler();
-        mSplashHandler.postDelayed(mDelayRunnable, mSplashTimeOut);
+        mSplashHandler.postDelayed(mDelayRunnable, SPLASH_TIMEOUT);
     }
 
     Runnable mDelayRunnable = new Runnable(){
@@ -45,29 +42,18 @@ public class MainActivity extends AppCompatActivity {
     };
 
     void initAppSetting(){
-        mInitSettings = getSharedPreferences(SoapGlobalConfig.PREFS_INIT_NAME, 0);
-
-        if(!isDbCreated()) {
-            initDatabase();
-        }
+        initDatabase();
     }
 
     private void initDatabase(){
         Log.d(TAG, "initDatabase() invoked");
-        mSplashTimeOut = 5000;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 SoapData.initDatabase(MainActivity.this);
-                mInitSettings.edit().putBoolean("db_created", true).commit();
             }
         }).start();
     }
-
-    private boolean isDbCreated(){
-        return mInitSettings.getBoolean("db_created", false);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
