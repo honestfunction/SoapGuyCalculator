@@ -1,6 +1,7 @@
 package com.soapguy.echain.soapcalculator;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -87,6 +88,7 @@ public class OilChooserActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
     private void saveChooserPreference(){
         mChooserPref = getSharedPreferences(SoapGlobalConfig.PREFS_CHOOSER_NAME, 0);
         SharedPreferences.Editor editor = mChooserPref.edit();
@@ -98,6 +100,30 @@ public class OilChooserActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    public static boolean [] loadChooserPref(Context context){
+        SharedPreferences chooserPref = context.getSharedPreferences(SoapGlobalConfig.PREFS_CHOOSER_NAME, 0);
+        String arrayName = SoapGlobalConfig.CHOISE_ARRAY_NAME;
+        int arraySize = chooserPref.getInt(arrayName+"_size",-1);
+        if (arraySize<0) return null;
+        boolean [] choices = new boolean[arraySize];
+        for (int i=0; i<arraySize;i++){
+            choices[i] = chooserPref.getBoolean(arrayName + "_" + i, false);
+        }
+        return choices;
+    }
+
+    /*
+    private static void saveChooserPreference(Context context, boolean [] arrayCheckBox){
+        SharedPreferences chooserPref = context.getSharedPreferences(SoapGlobalConfig.PREFS_CHOOSER_NAME, 0);
+        SharedPreferences.Editor editor = chooserPref.edit();
+        String arrayName = SoapGlobalConfig.CHOISE_ARRAY_NAME;
+        editor.putInt(arrayName + "_size", arrayCheckBox.length);
+        for(int i=0; i<arrayCheckBox.length; i++){
+            editor.putBoolean(arrayName +"_" + i, arrayCheckBox[i]);
+        }
+        editor.commit();
+    }
+    */
 
     private boolean isAnItemChecked(){
         for (boolean checked: mListCheckBox){
@@ -106,6 +132,7 @@ public class OilChooserActivity extends AppCompatActivity {
         return false;
     }
 
+    /*
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
@@ -116,12 +143,16 @@ public class OilChooserActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
+                        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                        homeIntent.addCategory(Intent.CATEGORY_HOME );
+                        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(homeIntent);
                     }
                 })
                 .setNegativeButton("No", null)
                 .show();
     }
+    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -7,7 +7,8 @@
 
     <string name="action_records">配方紀錄</string>
     <string name="action_new">新增油品</string>
-    <string name="action_reset">重新選擇油品</string>
+    <string name="action_reset">清空選項</string>
+    <string name="action_choose">重新選擇油品</string>
     <string name="action_rename">記錄更名</string>
     <string name="action_delete">記錄刪除</string>>
 

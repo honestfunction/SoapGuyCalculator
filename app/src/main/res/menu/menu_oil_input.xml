@@ -2,6 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.soapguy.echain.soapcalculator.OilInputActivity">
+    <item android:id="@+id/action_choose" android:title="@string/action_choose"
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_records" android:title="@string/action_records"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>

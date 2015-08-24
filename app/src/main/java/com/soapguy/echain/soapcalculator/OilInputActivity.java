@@ -206,6 +206,14 @@ public class OilInputActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
 
+        if(id == R.id.action_choose){
+            boolean[] choice = OilChooserActivity.loadChooserPref(OilInputActivity.this);
+            Intent intent = new Intent(OilInputActivity.this, OilChooserActivity.class);
+            if (choice != null) intent.putExtra(SoapGlobalConfig.CHOOSER_CHOICES_DATA, choice);
+            super.onResume();
+            startActivity(intent);
+        }
+
         if (id == R.id.action_records) {
             if(SoapData.getRecordsCount(OilInputActivity.this)>0) {
                 Intent intent = new Intent(OilInputActivity.this, OilRecordsActivity.class);

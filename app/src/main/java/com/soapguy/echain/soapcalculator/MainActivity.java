@@ -37,24 +37,12 @@ public class MainActivity extends AppCompatActivity {
     Runnable mDelayRunnable = new Runnable(){
         @Override
         public void run() {
-            boolean[] choice = loadChooserPref();
+            boolean[] choice = OilChooserActivity.loadChooserPref(MainActivity.this);
             Intent intent = new Intent(MainActivity.this, OilChooserActivity.class);
             if (choice != null) intent.putExtra(SoapGlobalConfig.CHOOSER_CHOICES_DATA, choice);
             startActivity(intent);
         }
     };
-
-    private boolean [] loadChooserPref(){
-        mChooserPref = getSharedPreferences(SoapGlobalConfig.PREFS_CHOOSER_NAME,0);
-        String arrayName = SoapGlobalConfig.CHOISE_ARRAY_NAME;
-        int arraySize = mChooserPref.getInt(arrayName+"_size",-1);
-        if(arraySize<0) return null;
-        boolean [] choices = new boolean[arraySize];
-        for (int i=0; i<arraySize;i++){
-            choices[i] = mChooserPref.getBoolean(arrayName + "_" + i, false);
-        }
-        return choices;
-    }
 
     void initAppSetting(){
         mInitSettings = getSharedPreferences(SoapGlobalConfig.PREFS_INIT_NAME, 0);

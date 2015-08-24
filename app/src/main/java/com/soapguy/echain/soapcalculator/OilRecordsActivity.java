@@ -127,7 +127,7 @@ public class OilRecordsActivity extends AppCompatActivity {
         lLayouts.add(generateResultLayout("水量(2)", mSoapOilCalculator.getWaterFormula(2),
                 mSoapOilCalculator.getWaterWeight(2)+""));
         lLayouts.add(generateResultLayout("水量(3)", mSoapOilCalculator.getWaterFormula(3),
-                mSoapOilCalculator.getWaterWeight(3)+""));
+                mSoapOilCalculator.getWaterWeight(3) + ""));
 
         mLayoutResult.removeAllViews();
         for(LinearLayout layout: lLayouts) {
@@ -221,8 +221,8 @@ public class OilRecordsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
 
-        if(id == R.id.action_reset){
-            boolean[] choice = loadChooserPref();
+        if(id == R.id.action_choose){
+            boolean[] choice = OilChooserActivity.loadChooserPref(OilRecordsActivity.this);
             Intent intent = new Intent(OilRecordsActivity.this, OilChooserActivity.class);
             if (choice != null) intent.putExtra(SoapGlobalConfig.CHOOSER_CHOICES_DATA, choice);
             super.onResume();
@@ -234,18 +234,6 @@ public class OilRecordsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private boolean [] loadChooserPref(){
-        SharedPreferences chooserPref = getSharedPreferences(SoapGlobalConfig.PREFS_CHOOSER_NAME,0);
-        String arrayName = SoapGlobalConfig.CHOISE_ARRAY_NAME;
-        int arraySize = chooserPref.getInt(arrayName + "_size", -1);
-        if(arraySize<0) return null;
-        boolean [] choices = new boolean[arraySize];
-        for (int i=0; i<arraySize;i++){
-            choices[i] = chooserPref.getBoolean(arrayName + "_" + i, false);
-        }
-        return choices;
     }
 
 }
